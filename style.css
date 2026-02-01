@@ -1,0 +1,185 @@
+/* Color System and Theme Variables */
+:root {
+    /* Dark Mode - Deep Slate */
+    --bg-color: #0f172a;
+    --surface: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent: #38bdf8;
+    --danger: #f43f5e;
+    --btn-secondary: #475569;
+}
+
+/* Light Mode Variables - Nordic Palette */
+.light-mode {
+    --bg-color: #f1f5f9;
+    --surface: #ffffff;
+    --text-primary: #334155;
+    --text-secondary: #64748b;
+    --accent: #0284c7;
+    --danger: #e11d48;
+    --btn-secondary: #cbd5e1;
+}
+
+/* Base Reset and Layout Settings */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; 
+}
+
+/* Body and Typography Configuration */
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    transition: all 0.4s ease;
+    height: 100dvh; 
+    overflow: hidden;
+}
+
+/* Main Application Container */
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+/* Theme Toggle Button Styling */
+.theme-btn {
+    background: var(--surface);
+    border: 1px solid var(--text-secondary);
+    border-radius: 50px;
+    width: 60px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* Icon Container within Toggle */
+.sun-moon-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    height: 100%;
+    font-size: 0.9rem;
+}
+
+/* Theme Icon Colors and Transitions */
+.sun-icon { color: #fbbf24; opacity: 1; transition: 0.3s; }
+.moon-icon { color: #94a3b8; opacity: 1; transition: 0.3s; }
+
+/* Icon Animation Logic for Theme Switching */
+.light-mode .sun-icon { transform: translateX(30px); opacity: 0; }
+.dark-mode .moon-icon { transform: translateX(-30px); opacity: 0; }
+
+/* Header and Brand Layout */
+.main-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+.logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
+.logo span { color: var(--accent); }
+.subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px; }
+
+/* Main Content Area Flexibility */
+.content-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 0;
+}
+
+/* Input Card Styling */
+.input-container {
+    flex-grow: 1;
+    background: var(--surface);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+}
+
+/* Language Badge and Status Bar */
+.status-bar { padding: 10px 15px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.lang-badge { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--accent); }
+
+/* Text Area and Highlight Layer Stack */
+.editor-wrapper { position: relative; flex-grow: 1; }
+
+/* Shared Text and Overlay Typography Styles */
+textarea, .highlight-overlay {
+    position: absolute;
+    width: 100%; height: 100%;
+    padding: 20px;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Primary Text Input Layer */
+textarea { color: var(--text-primary); z-index: 2; resize: none; outline: none; }
+
+/* Secondary Highlighting Layer */
+.highlight-overlay { color: transparent; z-index: 1; pointer-events: none; }
+
+/* Active Word Highlighting Effect */
+.word-highlight { background: var(--accent); color: #fff; border-radius: 4px; box-shadow: 0 0 8px var(--accent); }
+
+/* Control Panel Grid Layout */
+.control-panel {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 10px;
+    padding-bottom: 10px;
+}
+
+/* Standardized Button Styling */
+.action-btn {
+    padding: 16px;
+    border-radius: 15px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+
+/* Button Variant Colors */
+.primary { background: var(--accent); color: white; }
+.danger { background: var(--danger); color: white; }
+.secondary { background: var(--btn-secondary); color: var(--text-primary); }
+
+/* Button Interaction Feedback */
+.action-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+.action-btn:active { transform: scale(0.95); }
+
+/* Theme-Specific Icon Visibility Overrides */
+.light-mode .moon-icon {
+    opacity: 1 !important;
+    transform: none !important;
+    color: #64748b; 
+}
+
+.light-mode .sun-icon {
+    opacity: 0 !important;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 600px) {
+    .control-panel { grid-template-columns: 1fr 1fr; }
+    .primary { grid-column: span 2; }
+    textarea { font-size: 1rem; }
+}
