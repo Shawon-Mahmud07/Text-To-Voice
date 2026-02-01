@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Text-to-Voice</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3039/3039399.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="dark-mode">
+  <div class="app-wrapper">
+    <header class="main-header">
+      <div class="logo">Text-to-<span>Voice</span></div>
+      <button id="themeToggle" class="theme-btn" title="Toggle Theme">
+        <div class="sun-moon-container">
+          <i class="fas fa-sun sun-icon"></i>
+          <i class="fas fa-moon moon-icon"></i>
+        </div>
+      </button>
+    </header>
+
+    <p class="subtitle">Transform your text into professional voice instantly</p>
+
+    <main class="content-area">
+      <div class="input-container">
+        <div class="status-bar">
+          <span id="langIndicator" class="lang-badge">Auto Detecting...</span>
+        </div>
+        <div class="editor-wrapper">
+          <textarea id="textInput" placeholder="Start typing here (English, Bengali, or Hindi)..."></textarea>
+          <div id="highlightOverlay" class="highlight-overlay"></div>
+        </div>
+      </div>
+
+      <div class="control-panel">
+        <button id="speakBtn" class="action-btn primary">
+          <i class="fas fa-play"></i> <span>Speak</span>
+        </button>
+        <button id="stopBtn" class="action-btn danger" disabled>
+          <i class="fas fa-stop"></i> <span>Stop</span>
+        </button>
+        <button id="clearBtn" class="action-btn secondary">
+          <i class="fas fa-trash-can"></i> <span>Clear</span>
+        </button>
+      </div>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>
