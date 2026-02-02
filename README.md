@@ -43,8 +43,12 @@ It supports **English, Bengali, and Hindi**, features **live word highlighting**
 5. Spoken words are highlighted in real time
 
 ---
+## 🌐 Live Demo
+
+Check the project live here: [Text-to-Voice](https://text-2voice.netlify.app/)
 
 ## 📂 Project Structure
+---
 
 ```plaintext
 text-to-voice/
@@ -53,4 +57,5 @@ text-to-voice/
 ├── style.css       # Styling & themes
 ├── script.js       # Speech logic & UI handling
 └── README.md       # Documentation
+
 
