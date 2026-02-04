@@ -1,133 +1,154 @@
-/* =============================================================
-   Global Variables and UI Element References
-   ============================================================= */
 const synth = window.speechSynthesis;
+
 const textInput = document.getElementById("textInput");
 const highlightOverlay = document.getElementById("highlightOverlay");
-const langIndicator = document.getElementById("langIndicator");
+
 const speakBtn = document.getElementById("speakBtn");
 const stopBtn = document.getElementById("stopBtn");
+const clearBtn = document.getElementById("clearBtn");
+
+const voiceSelect = document.getElementById("voiceSelect");
+const genderSelect = document.getElementById("genderSelect");
+
+const rateControl = document.getElementById("rateControl");
+const pitchControl = document.getElementById("pitchControl");
+const rateValue = document.getElementById("rateValue");
+const pitchValue = document.getElementById("pitchValue");
+
 const themeToggle = document.getElementById("themeToggle");
 
 let voices = [];
 
-/* =============================================================
-   Language Detection Logic (Unicode based)
-   ============================================================= */
+/* -------------------------------
+   LANGUAGE DETECT (Unicode)
+-------------------------------- */
 function detectLanguage(text) {
-  if (/[\u0980-\u09FF]/.test(text)) return { code: "bn", label: "Bengali" };
-  if (/[\u0900-\u097F]/.test(text)) return { code: "hi", label: "Hindi" };
-  return { code: "en", label: "English" };
+  if (/[\u0980-\u09FF]/.test(text)) return "bn";
+  if (/[\u0900-\u097F]/.test(text)) return "hi";
+  if (/[\u0600-\u06FF]/.test(text)) return "ar";
+  if (/[\u4E00-\u9FFF]/.test(text)) return "zh";
+  return "en";
 }
 
-/* =============================================================
-   Asynchronous Voice Loading for Browser Compatibility
-   ============================================================= */
-function getVoicesPromise() {
-  return new Promise((resolve) => {
-    let v = synth.getVoices();
-    if (v.length !== 0) {
-      resolve(v);
-    } else {
-      // Wait for voices to be loaded by the browser
-      synth.onvoiceschanged = () => {
-        v = synth.getVoices();
-        resolve(v);
-      };
-    }
+/* -------------------------------
+   BEST VOICE PICKER
+-------------------------------- */
+function isMale(voice) {
+  return /male|man|masculine/i.test(voice.name);
+}
+
+function isFemale(voice) {
+  return /female|woman|feminine/i.test(voice.name);
+}
+
+function getBestVoice(lang, gender) {
+  let list = voices.filter((v) => v.lang.toLowerCase().startsWith(lang));
+
+  if (gender === "male") list = list.filter(isMale);
+  if (gender === "female") list = list.filter(isFemale);
+
+  // Bengali priority
+  if (lang === "bn") {
+    return (
+      list.find((v) => v.lang === "bn-BD") ||
+      list.find((v) => v.lang === "bn-IN") ||
+      list[0]
+    );
+  }
+
+  return list[0];
+}
+
+/* -------------------------------
+   LOAD VOICES
+-------------------------------- */
+function loadVoices() {
+  voices = synth.getVoices();
+  voiceSelect.innerHTML = "";
+
+  voices.forEach((voice, i) => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = `${voice.name} (${voice.lang})`;
+    voiceSelect.appendChild(opt);
   });
 }
 
-/* =============================================================
-   Input Event: Syncs text with overlay and detects language
-   ============================================================= */
-textInput.addEventListener("input", () => {
-  const text = textInput.value;
-  highlightOverlay.innerText = text;
-  const lang = detectLanguage(text);
-  langIndicator.innerText = `Detected: ${lang.label}`;
+loadVoices();
+speechSynthesis.onvoiceschanged = loadVoices;
+
+/* -------------------------------
+   UI EVENTS
+-------------------------------- */
+rateControl.addEventListener("input", () => {
+  rateValue.innerText = rateControl.value;
 });
 
-/* =============================================================
-   Core Speech Functionality with Word Highlighting
-   ============================================================= */
-async function speak() {
-  // Prevent overlapping speech
-  if (synth.speaking) {
-    console.error("Already speaking...");
-    return;
-  }
+pitchControl.addEventListener("input", () => {
+  pitchValue.innerText = pitchControl.value;
+});
+
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("light-mode");
+  document.body.classList.toggle("dark-mode");
+});
+
+/* -------------------------------
+   SPEAK
+-------------------------------- */
+function speak() {
+  if (synth.speaking) return;
 
   const text = textInput.value.trim();
-  if (!text) {
-    alert("Please enter some text!");
-    return;
+  if (!text) return alert("Type something!");
+
+  const lang = detectLanguage(text);
+  const gender = genderSelect.value;
+
+  const utter = new SpeechSynthesisUtterance(text);
+
+  const manualVoice = voices[voiceSelect.value];
+  const voice = manualVoice || getBestVoice(lang, gender);
+
+  if (voice) {
+    utter.voice = voice;
+    utter.lang = voice.lang;
   }
 
-  // Ensure voices are loaded before proceeding
-  voices = await getVoicesPromise();
-  const langInfo = detectLanguage(text);
-  const utterThis = new SpeechSynthesisUtterance(text);
+  utter.rate = Number(rateControl.value);
+  utter.pitch = Number(pitchControl.value);
 
-  // Improved filtering to find appropriate local voices (e.g., bn-BD or bn-IN)
-  let selectedVoice = voices.find((v) =>
-    v.lang.toLowerCase().startsWith(langInfo.code),
-  );
-
-  if (selectedVoice) {
-    utterThis.voice = selectedVoice;
-    utterThis.lang = selectedVoice.lang;
-  } else {
-    // Fallback to regional codes if specific voice object is missing
-    utterThis.lang =
-      langInfo.code === "bn"
-        ? "bn-IN"
-        : langInfo.code === "hi"
-          ? "hi-IN"
-          : "en-US";
-  }
-
-  utterThis.rate = 1.0;
-  utterThis.pitch = 1.0;
-
-  // Visual Highlighting: Triggered on every word boundary
-  utterThis.onboundary = (event) => {
-    if (event.name === "word") {
-      const start = event.charIndex;
-      const end = start + event.charLength;
-      const before = text.substring(0, start);
-      const word = text.substring(start, end);
-      const after = text.substring(end);
-      highlightOverlay.innerHTML = `${before}<span class="word-highlight">${word}</span>${after}`;
+  utter.onboundary = (e) => {
+    if (e.name === "word") {
+      const s = e.charIndex;
+      const e2 = s + e.charLength;
+      highlightOverlay.innerHTML =
+        text.slice(0, s) +
+        `<span class="word-highlight">${text.slice(s, e2)}</span>` +
+        text.slice(e2);
     }
   };
 
-  // UI State Management during speech
-  utterThis.onstart = () => {
+  utter.onstart = () => {
     speakBtn.disabled = true;
     stopBtn.disabled = false;
-    speakBtn.querySelector("span").innerText = "Speaking...";
   };
 
-  utterThis.onend = () => resetUI();
-  utterThis.onerror = () => resetUI();
+  utter.onend = resetUI;
+  utter.onerror = resetUI;
 
-  synth.speak(utterThis);
+  synth.speak(utter);
 }
 
-/* =============================================================
-   Reset UI to Default State
-   ============================================================= */
 function resetUI() {
   speakBtn.disabled = false;
   stopBtn.disabled = true;
-  speakBtn.querySelector("span").innerText = "Speak";
-  highlightOverlay.innerHTML = textInput.value;
+  highlightOverlay.innerHTML = "";
 }
 
-/* =============================================================
-   Event Listeners for Controls and Theme Toggle
-   ============================================================= */
+/* -------------------------------
+   BUTTONS
+-------------------------------- */
 speakBtn.addEventListener("click", speak);
 
 stopBtn.addEventListener("click", () => {
@@ -135,18 +156,9 @@ stopBtn.addEventListener("click", () => {
   resetUI();
 });
 
-document.getElementById("clearBtn").addEventListener("click", () => {
+clearBtn.addEventListener("click", () => {
   synth.cancel();
   textInput.value = "";
   highlightOverlay.innerHTML = "";
   resetUI();
-});
-
-themeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("light-mode");
-});
-
-// Initializing voices on page load
-getVoicesPromise().then((v) => {
-  voices = v;
 });

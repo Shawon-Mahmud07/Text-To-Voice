@@ -2,17 +2,12 @@
 <html lang="en">
 
 <head>
-  <!-- Meta & basic setup -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-  <!-- App title & favicon -->
+  <meta charset="UTF-8" />
   <title>Text to Voice</title>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3039/3039399.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 <body class="dark-mode">
@@ -22,53 +17,72 @@
     <header class="main-header">
       <div class="logo">Text-to-<span>Voice</span></div>
 
-      <!-- Theme toggle -->
-      <button id="themeToggle" class="theme-btn" title="Toggle Theme">
-        <div class="sun-moon-container">
-          <i class="fas fa-sun sun-icon"></i>
-          <i class="fas fa-moon moon-icon"></i>
-        </div>
+      <button id="themeToggle" class="theme-btn" title="Toggle theme">
+        <i class="fas fa-sun sun-icon"></i>
+        <i class="fas fa-moon moon-icon"></i>
       </button>
     </header>
 
-    <!-- Subtitle -->
-    <p class="subtitle">Transform your text into professional voice instantly</p>
+    <p class="subtitle">
+      Convert text into natural speech (Any Language)
+    </p>
 
     <main class="content-area">
 
-      <!-- Text input area -->
+      <!-- Text Input -->
       <div class="input-container">
-        <div class="status-bar">
-          <span id="langIndicator" class="lang-badge">Auto Detecting...</span>
-        </div>
+        <textarea id="textInput" placeholder="Type here (English, বাংলা, हिन्दी, العربية, 中文...)"></textarea>
 
-        <div class="editor-wrapper">
-          <textarea id="textInput" placeholder="Start typing here (English, Bengali, or Hindi)...">
-          </textarea>
-
-          <!-- Text highlight / speech progress -->
-          <div id="highlightOverlay" class="highlight-overlay"></div>
-        </div>
+        <div id="highlightOverlay" class="highlight-overlay"></div>
       </div>
 
-      <!-- Controls -->
+      <!-- Voice Settings -->
+      <div class="voice-settings">
+
+        <div class="field">
+          <label>Voice</label>
+          <select id="voiceSelect"></select>
+        </div>
+
+        <div class="field">
+          <label>Gender</label>
+          <select id="genderSelect">
+            <option value="all">All</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Speed: <span id="rateValue">1</span></label>
+          <input type="range" id="rateControl" min="0.5" max="2" step="0.1" value="1">
+        </div>
+
+        <div class="field">
+          <label>Pitch: <span id="pitchValue">1</span></label>
+          <input type="range" id="pitchControl" min="0" max="2" step="0.1" value="1">
+        </div>
+
+      </div>
+
+      <!-- Buttons -->
       <div class="control-panel">
         <button id="speakBtn" class="action-btn primary">
-          <i class="fas fa-play"></i> <span>Speak</span>
+          <i class="fas fa-play"></i> Speak
         </button>
 
         <button id="stopBtn" class="action-btn danger" disabled>
-          <i class="fas fa-stop"></i> <span>Stop</span>
+          <i class="fas fa-stop"></i> Stop
         </button>
 
         <button id="clearBtn" class="action-btn secondary">
-          <i class="fas fa-trash-can"></i> <span>Clear</span>
+          <i class="fas fa-trash"></i> Clear
         </button>
       </div>
+
     </main>
   </div>
 
-  <!-- App script -->
   <script src="script.js"></script>
 </body>
 
