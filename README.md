@@ -1,28 +1,31 @@
 # Text-to-Voice 🎙️
 
-A modern, browser-based **Text-to-Speech web application** that converts written text into natural-sounding voice using the **Web Speech API**.  
-It supports **English, Bengali, and Hindi**, features **live word highlighting**, and includes a **dark/light theme toggle** for a polished user experience.
+A modern, responsive **Text-to-Voice (TTV) web application** built with the **Web Speech API**. This tool converts written text into natural-sounding speech with real-time word highlighting and customizable voice settings.
 
 ---
 
 ## 🚀 Features
 
-- 🔊 Convert text to speech instantly
-- 🌐 Automatic language detection (English, Bengali, Hindi)
-- ✨ Live word-by-word highlighting during speech
-- 🌙 Dark & light mode support
-- 🎛️ Play, stop, and clear controls
-- 📱 Fully responsive (desktop & mobile)
-- ⚡ No external API required
+- 🔊 **Instant TTS**: Seamlessly convert text to speech using native browser engines.
+- 🌐 **Smart Language Detection**: Automatically detects **English, Bengali, Hindi, Arabic, and Chinese** using Unicode range patterns.
+- ✨ **Live Highlighting**: Visual word-by-word tracking as the text is being spoken.
+- 🎛️ **Advanced Controls**:
+    - **Voice Selection**: Choose from all available system voices.
+    - **Gender Filtering**: Filter voices by Male or Female (browser-dependent).
+    - **Speed & Pitch**: Fine-tune the audio output with real-time slider controls.
+- 🌙 **Dual Themes**: Toggle between a sleek Dark Mode and a clean Light Mode.
+- 📱 **Adaptive UI**: Fully responsive design optimized for both desktop and mobile devices.
+- ⚡ **Privacy Focused**: Processes everything locally in the browser; no external API calls or data tracking.
 
 ---
 
 ## 🛠️ Built With
 
-- **HTML5** – Semantic structure  
-- **CSS3** – Modern theming & responsive UI  
-- **Vanilla JavaScript** – Speech logic & interaction  
-- **Web Speech API** – Native text-to-speech engine  
+- **HTML5** – Semantic structure and layout.
+- **CSS3 (Custom Properties)** – Modern theming, CSS Grid, and Flexbox.
+- **Vanilla JavaScript** – Logic for speech synthesis and DOM manipulation.
+- **Web Speech API** – Powering the core text-to-speech engine.
+- **Font Awesome** – Interactive UI iconography.
 
 ---
 
@@ -36,26 +39,22 @@ It supports **English, Bengali, and Hindi**, features **live word highlighting**
 
 ## 🧠 How It Works
 
-1. User enters text into the input area
-2. Language is automatically detected using Unicode ranges
-3. An appropriate system voice is selected
-4. Speech is generated using the Web Speech API
-5. Spoken words are highlighted in real time
+1. **Input Analysis**: As you type or click 'Speak', the app runs a Regex check against Unicode blocks to identify the language.
+2. **Voice Matching**: The `getBestVoice()` function attempts to find a voice that matches both the detected language and your selected gender preference.
+3. **Synthesis**: The `SpeechSynthesisUtterance` interface handles the audio playback.
+4. **Visual Sync**: The `onboundary` event captures the character index of spoken words, which is then mapped to the `highlightOverlay` to create the "karaoke" effect.
 
 ---
-## 🌐 Live Demo
 
-Check the project live here: [Text-to-Voice](https://text-2voice.netlify.app/)
+## 🌐 Live Demo
+Experience the app here: [**Text-to-Voice**](https://text-2voice.netlify.app/) 🔗
 
 ## 📂 Project Structure
----
 
 ```plaintext
 text-to-voice/
 │
-├── index.html      # App structure
-├── style.css       # Styling & themes
-├── script.js       # Speech logic & UI handling
-└── README.md       # Documentation
-
-
+├── index.html      # Structure & UI Components
+├── style.css       # Theming (Dark/Light) & Responsive Design
+├── script.js       # Speech logic, Language detection & UI Events
+└── README.md       # Project Documentation
